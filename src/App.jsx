@@ -12,15 +12,18 @@ const App = () => {
   const ratingHandler=(rating)=>{
     if(rating=='good'){
         setGood(prevState=>prevState+1);
+
     }else if(rating=='neutral'){
 setNeutral((prevState) => prevState + 1);
+
     }else if(rating=='bad'){
 setBad((prevState) => prevState + 1);
+
     }
   }
 
   useEffect(()=>{
-    if(good>0){
+    if(good>0 || neutral>0 || bad>0){
 let average = (good - bad) / (good + bad + neutral);
 setAverage(average);
 setAllRating(good + bad + neutral);

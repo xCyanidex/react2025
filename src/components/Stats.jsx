@@ -1,3 +1,7 @@
+import RatingButtons from "./RatingButtons";
+import StatLine from "./StatLine";
+import StatTable from "./StatTable";
+
 const  Stats=({      ratingHandler,
         good,
         bad,
@@ -6,26 +10,26 @@ const  Stats=({      ratingHandler,
         average
         })=>{
 
+          const RatingNames=['Good','Neutral','Bad','All','Average'];
+          const Ratings=[good,neutral,bad,allRating,average];
+
     return (
       <>
         <h1 style={{ color: "white" }}>Give Feedback</h1>
-        <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-          <button style={{}} onClick={() => ratingHandler("good")}>
-            Good
-          </button>
-          <button style={{}} onClick={() => ratingHandler("neutral")}>
-            Neutral
-          </button>
-          <button style={{}} onClick={() => ratingHandler("bad")}>
-            Bad
-          </button>
-        </div>
-        <h2 style={{ color: "white" }}>Statistics</h2>
-        <p style={{ color: "white" }}>Good: {good}</p>
-        <p style={{ color: "white" }}>Neutral: {neutral}</p>
-        <p style={{ color: "white" }}>Bad: {bad}</p>
-        <p style={{ color: "white" }}>all: {allRating}</p>
-        <p style={{ color: "white" }}>Average: {average}</p>
+        <RatingButtons onClickHandler={ratingHandler} />
+        {allRating == 0 ? (
+          <p style={{ color: "white" }}>No feedback given for now.</p>
+        ) : (
+          <>
+            <h2 style={{ color: "white" }}>Statistics</h2>
+            <StatTable RatingNames={RatingNames} Ratings={Ratings} />
+            {/* <StatLine text={"Good"} value={good} />
+            <StatLine text={"Neutral"} value={neutral} />
+            <StatLine text={"Bad"} value={bad} />
+            <StatLine text={"All"} value={allRating} />
+            <StatLine text={"Average"} value={average} /> */}
+          </>
+        )}
       </>
     );
 }
