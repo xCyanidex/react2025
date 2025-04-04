@@ -5,6 +5,7 @@ const App = () => {
 
      const [selected, setSelected] = useState(0);
      const [votes, setVotes] = useState([0, 0, 0, 0, 0, 0, 0,0]);
+     const [mostVoted,setMostVoted]=useState();
 
   const randomizer=()=>{
     const randomInt = Math.floor(Math.random() * 8);
@@ -15,6 +16,8 @@ const App = () => {
     const copy = [...votes];
     copy[selectedIndex]=copy[selectedIndex]+1;
     setVotes(copy);
+   let maxIndex = votes.indexOf(Math.max(...votes));
+    setMostVoted(maxIndex);
   };
     const anecdotes = [
       "If it hurts, do it more often.",
@@ -34,6 +37,11 @@ const App = () => {
       <h4 style={{ color: "white" }}>This one has {votes[selected]} votes;</h4>
       <button onClick={randomizer}>Next anedote</button>
       <button onClick={() => voter(selected)}>Vote</button>
+
+      <h3 style={{ color: "white" }}>The most voted one is:</h3>
+      <p style={{ color: "white" }}>
+        {anecdotes[mostVoted]}, has {Math.max(...votes)}.
+      </p>
     </>
   ); 
 };
