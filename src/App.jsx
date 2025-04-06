@@ -1,54 +1,64 @@
-import { useState } from "react";
+  import { useState, useEffect } from "react";
+  import axios from "axios";
 import Note from "./components/Note";
 
-const App = (props) => {
+  const App = () => {
+    const [persons, setPersons] = useState([]);
+    const [newPersonName,setNewPersonName]=useState("");
+    const [newPersonNumber, setNewPersonNumber] = useState("");
 
-  const [notes, setNotes] = useState(props.notes);
+      useEffect(() => {
+        console.log("effect");
+        axios.get("http://localhost:3001/persons").then((response) => {
+          console.log("promise fulfilled");
+          console.log(response.data)
+          setPersons(response.data);
+        });
+      }, []);
+      console.log("render", persons.length, "notes");
 
-  const [newNote, setNewNote] = useState("a new note..."); 
+  const  addPerson = (event) => {
+        event.preventDefault();
+        const personObject = {
+          name: newPersonName,
+          number:newPersonNumber
+        };
 
-    const [showAll, setShowAll] = useState(true);
+        axios
+          .post("http://localhost:3001/persons", personObject)
+          .then((response) => {
+            setPersons(persons.concat(response.data));
+            setNewPersonName("");
+            setNewPersonNumber("");
+            console.log(response);
+          });
+      };
+      const handleNameChange=(e)=>{
+setNewPersonName(e.target.value);
+      }
 
- const addNote = (event) => {
-   event.preventDefault();
-   const noteObject = {
-     content: newNote,
-     important: Math.random() < 0.5,
-     id: String(notes.length + 1),  
-   };
+      const handleNumberChange=(e)=>{
+        setNewPersonNumber(e.target.value);
+      }
 
-   setNotes(notes.concat(noteObject));
-   setNewNote("");
- };
-
-     const handleNoteChange = (event) => {
-       console.log(event.target.value);
-       setNewNote(event.target.value);
-     };
-
-       const notesToShow = showAll
-         ? notes
-         : notes.filter((note) => note.important === true);
-
-  return (
-    <div>
-      <h1>Notes</h1>
+    return (
       <div>
-        <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? "important" : "all"}
-        </button>
+        <form onSubmit={addPerson}>
+          <label>Name</label>
+          <input value={newPersonName} onChange={handleNameChange} />
+          <label>Number</label>
+          <input value={newPersonNumber} onChange={handleNumberChange} />
+          <button type="submit">Submit</button>
+        </form>
+        {persons.map((person) => {
+          return (
+            <p>
+              Name: {person.name}, Number: {person.number}
+            </p>
+          );
+        })}
       </div>
-      <ul>
-        {notesToShow.map((note) => (
-          <Note key={note.id} note={note} />
-        ))}
-      </ul>
-      <form onSubmit={addNote}>
-        <input value={newNote} onChange={handleNoteChange} />
-        <button type="submit">save</button>
-      </form>
-    </div>
-  );
-};
+    );
+  };
 
-export default App;
+  export default App;
